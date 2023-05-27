@@ -1,0 +1,161 @@
+@extends('templates.desa.main')
+
+@section('content')
+<div class="clearfix"></div>
+<div class="row justify-content-center mt-2">
+    <div class="col-md-12 col-sm-12  ">
+        <h5 class="alert alert-info">Form Input/Update Data APBDes</h5>
+        <div class="x_panel">
+            <div class="x_title">
+
+                <div class="d-flex">
+                    <form class="form-inline" action="/adminDesa/formApbdes" method="get">
+                        @csrf
+                        <div class="form-group mx-sm-3 mb-2">
+                            <h6>Masukkan tahun data :</h6>
+                            <input type="text" name="tahun" class="form-control ml-3" placeholder="{{ $tahun }}"
+                                data-inputmask="'mask': '9999'" style="font-size: .85rem">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm mb-2">Cek Data</button>
+                    </form>
+
+
+
+                </div>
+                <hr>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            aria-expanded="false"><i class="fa fa-wrench"></i></a>
+
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="text-dark">
+                    Tahun Data : {{ $tahun }} &emsp;&emsp;&emsp; <span>APBDes Murni TA {{ $tahun }}</span>
+
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                <ul class="nav nav-tabs bar_tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link  {{ $jenis=='dokumen' ? 'active' : '' }}"
+                            href="?jenis=dokumen&tahun={{ $tahun }}" role="tab">Kelengkapan Dokumen
+                            <span class="fa fa-check-circle ml-1 {{ $dokumen ? '' : 'd-none'}} "></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ $jenis=='pendapatan' ? 'active' : '' }}"
+                            href="?jenis=pendapatan&tahun={{ $tahun }}" role="tab">Pendapatan
+                            <span class="fa fa-check-circle ml-1 {{ $apbdes_pendapatan ? '' : 'd-none'}}  "></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ $jenis=='belanja' ? 'active' : '' }} "
+                            href="?jenis=belanja&tahun={{ $tahun }}" role="tab">
+                            Belanja
+                            <span class="fa fa-check-circle ml-1 {{ $belanja ? '' : 'd-none' }} "></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  {{ $jenis=='anggaran_kegiatan' ? 'active' : '' }}  "
+                            href="?jenis=anggaran_kegiatan&tahun={{ $tahun }}" role="tab"> Anggaran Bidang/Sub/Kegiatan
+                            <span class="fa fa-check-circle ml-1 {{ $apbdes_belanja ? '' : 'd-none'}}  "></span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {{ $jenis=='pembiayaan' ? 'active' : '' }} "
+                            href="?jenis=pembiayaan&tahun={{ $tahun }}" role="tab">Pembiayaan
+                            <span class="fa fa-check-circle ml-1 {{ $apbdes_pembiayaan ? '' : 'd-none'}} "></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  {{ $jenis=='cek_struktur' ? 'active' : '' }}"
+                            href="?jenis=cek_struktur&tahun={{ $tahun }}" role="tab">Cek Struktur
+                            APBDes
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane active show " id="kewilayahan" role="tabpanel"
+                        aria-labelledby="kewilayahan-tab">
+                        @if($jenis == 'anggaran_kegiatan')
+                        @include('adminDesa.formApbdes.anggaran_kegiatan_edit')
+                        @elseif($jenis=='pendapatan')
+                        @include('adminDesa.formApbdes.anggaran_pendapatan_edit')
+                        @elseif($jenis=='pembiayaan')
+                        @include('adminDesa.formApbdes.anggaran_pembiayaan_edit')
+                        @elseif($jenis=='dokumen')
+                        @include('adminDesa.formApbdes.anggaran_dokumen_edit')
+                        @elseif($jenis=='belanja')
+                        @include('adminDesa.formApbdes.anggaran_belanja_edit')
+                        @elseif($jenis=='cek_struktur')
+                        @include('adminDesa.formApbdes.strukturApbdes')
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{-- notifikasi --}}
+@if(session()->has('success'))
+<script>
+    Swal.fire({
+  position: 'center',
+  icon: 'success',
+  title: '{{ session("success") }}',
+  showConfirmButton: false,
+  timer: 1500
+})
+</script>
+
+@endif
+
+@if(session()->has('update'))
+<script>
+    Swal.fire({
+  position: 'top-end',
+  icon: 'success',
+  title: '{{ session("update") }}',
+  showConfirmButton: false,
+  timer: 1500
+})
+</script>
+
+@endif
+
+@endsection
+@push('script')
+<script src="/vendors/jquery.inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+<script src="/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+<script>
+    bsCustomFileInput.init();
+</script>
+<!-- bootstrap-progressbar -->
+@if(session()->has('timpa'))
+<script>
+    $('#copyData').modal('show');
+    $('.anggaran').mask('000.000.000.000.000', {reverse: true});
+
+
+</script>
+@endif
+@if(session()->has('timpaAll'))
+<script>
+    $('#copyDataAll').modal('show');
+
+</script>
+@endif
+
+
+@endpush
