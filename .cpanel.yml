@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/lampungu/public_html/subdomain/simondes/
+    - /bin/cp -R * $DEPLOYPATH
