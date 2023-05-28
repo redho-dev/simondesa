@@ -28,7 +28,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files" : [
-            "app/Helpers/Pembantu.php"
+            "app/Helpers/Pembantu.php",
+            "app/Helpers/Function.php"
         ]
     },
     "autoload-dev": {

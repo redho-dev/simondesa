@@ -14,4 +14,9 @@ class Nilai_bumd extends Model
     {
         return $this->belongsTo(Asal::class);
     }
+
+    public function indikator_bumd()
+    {
+        return $this->belongsTo(Indikator_bumd::class);
+    }
 }

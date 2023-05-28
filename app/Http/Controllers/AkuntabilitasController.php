@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Aspek;
+use App\Models\Indikator_bumd;
+use App\Models\Nilai_bumd;
 use App\Models\Nilai_keuangan;
 use App\Models\Nilai_pemerintahan;
 use App\Models\Rekap_nilai_aspek;
@@ -29,18 +31,39 @@ class AkuntabilitasController extends Controller
             'tahun' => $tahun
         ])->get();
 
-        $akuntabilitas = $rekapAspek->pluck('skor')->sum();
-        $nilaiPemdes = $rekapAspek->where('aspek_id', 1)->pluck('nilai')->first();
-        $skorPemdes = $rekapAspek->where('aspek_id', 1)->pluck('skor')->first();
+        if (count($rekapAspek) > 0) {
+            $akuntabilitas = $rekapAspek->pluck('skor')->sum();
+            $nilaiPemdes = round($rekapAspek->where('aspek_id', 1)->pluck('nilai')->first());
+            $skorPemdes = $rekapAspek->where('aspek_id', 1)->pluck('skor')->first();
+            $nilaiKeudes = $rekapAspek->where('aspek_id', 2)->pluck('nilai')->first();
+            $skorKeudes = $rekapAspek->where('aspek_id', 2)->pluck('skor')->first();
+        } else {
+            $akuntabilitas = 0;
+            $nilaiPemdes = 0;
+            $skorPemdes = 0;
+            $nilaiKeudes = 0;
+            $skorKeudes = 0;
+        }
+        $rekapBumdes = Nilai_bumd::where([
+            'asal_id' => $infos->asal_id,
+            'tahun' => $tahun
+        ])->get();
+        $akunBumdes = $rekapBumdes->pluck('skor')->sum();
+        $indikatorBumdes = Indikator_bumd::where('tahun', $tahun)->get();
 
         $infos = Admin::with('asal')->where('id', session('loggedAdminDesa'))->first();
-
+        $akun = $request->akun;
         return view('adminDesa.progress.nilaiAkun', [
             'tahun' => $tahun,
             'infos' => $infos,
             'akuntabilitas' => $akuntabilitas,
             'nilaiPemdes' => $nilaiPemdes,
             'skorPemdes' => $skorPemdes,
+            'nilaiKeudes' => $nilaiKeudes,
+            'skorKeudes' => $skorKeudes,
+            'akunBumdes' => $akunBumdes,
+            'indikatorBumdes' => $indikatorBumdes,
+            'akun' => $akun
 
         ]);
     }

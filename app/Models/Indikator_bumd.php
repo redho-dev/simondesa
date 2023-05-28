@@ -9,4 +9,8 @@ class Indikator_bumd extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    public function nilai_bumd()
+    {
+        return $this->hasMany(Nilai_bumd::class);
+    }
 }

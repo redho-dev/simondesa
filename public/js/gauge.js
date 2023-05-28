@@ -85,7 +85,7 @@ $(function () {
       let gauge = new GaugeChart(item, params);
       gauge.init();
     });
-   
+
 
     $('#random').click(function () {
 
